@@ -194,9 +194,6 @@ async function main() {
   await initProfile();
   // await setupCollection();
   await setupContactInfoCollection();
-
-  // userClient = await createUserClient();
-  // delegation = await createDelegation();
 }
 
 async function createDelegation(userKeypair) {
