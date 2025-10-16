@@ -46,6 +46,8 @@ interface ContactInfo {
 
 const app = express();
 
+const userDids = new Map();
+
 app.use(express.json());
 
 let users: User[] = [];
@@ -59,6 +61,19 @@ app.post('/users', (req: Request, res: Response) => {
     users.push(user);
     res.status(201).json(user);
 })
+
+app.post('/userdid', async (req: Request, res: Response) => {
+  let currentUserKeypair = Keypair.generate();
+  const userKPString = currentUserKeypair.toDid().toString();
+  userDids.set(userKPString, {
+    did: userKPString
+  });
+  res.status(201).send(userKPString);
+});
+
+app.get('/userdid', async (req: Request, res: Response) => {
+  res.status(200).json(Array.from(userDids.keys()));
+});
 
 app.post('/contactinfo', async (req: Request, res: Response) => {
     const contactinfo: ContactInfo = req.body;
