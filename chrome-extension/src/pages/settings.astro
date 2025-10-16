@@ -1,0 +1,48 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout>
+  <div class="min-h-screen bg-base-200 flex items-center">
+    <div class="card mx-auto w-full max-w-5xl  shadow-xl">
+      <div class="grid  md:grid-cols-2 grid-cols-1  bg-base-100 rounded-xl">
+        <div class="">
+          
+            <div class="hero min-h-full rounded-l-xl bg-base-200">
+                <div class="hero-content py-12">
+                  <div class="max-w-md">
+    
+                  <h1 class='text-3xl text-center font-bold '>WebCaddy</h1>
+    
+                    <div class="text-center mt-12"><p class="w-48 inline-block">Private Data Manager</p></img></div>                 
+                 
+                  
+                  </div>
+    
+                </div>
+              </div>
+
+        </div>
+        <div class="py-24 px-10">
+          <h2 class="text-2xl font-semibold mb-1 text-start">
+            Activate your Private Storage
+            </h2>
+            <p class='my-8 font-semibold text-left'>Please enter the private key for your Nillion Private Storage below. This key will be used to initialize a secure collection for your data and is never sent to a third party.</p>
+            <form id="activatePrivateStorageForm">
+                <div class="mb-4">
+                    <label class="label"><span class="my-2 label-text text-base-content">Nillion Private Key</span></label>
+                    <input type="text" class="w-full text-3xl p-2 border-blue-700 border-2" />
+                </div>                
+                <button id="activatePrivateStorageSubmitBtn" type="submit" class="btn mt-2 w-full btn-primary">Activate Private Storage</button>
+                <div class='text-center mt-4'>Don't have an account yet? <a href="/register"><button class="  inline-block  hover:text-primary hover:underline hover:cursor-pointer transition duration-200">Register</button></a></div>
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  </Layout>
+
+<script src="/settings.js" is:inline>
+
+</script>
+

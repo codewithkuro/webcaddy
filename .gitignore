@@ -1,0 +1,9 @@
+api/node_modules
+chrome-extension/node_modules
+api/dist
+chrome-extension/dist
+chrome-extension/.vscode
+api/.env
+api/pnpm-lock.yaml
+chrome-extension/pnpm-lock.yaml
+api/.parcel-cache

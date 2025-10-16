@@ -1,0 +1,35 @@
+{
+  "name": "server3",
+  "version": "1.0.0",
+  "source": "src/app.ts",
+  "main": "dist/app.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "parcel watch",
+    "build": "parcel build",
+    "dev": "ts-node src/app.ts",
+    "redev": "npm run build && npm run prod",
+    "prod": "node dist/app.js"
+
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0",
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.7.2",
+    "parcel": "^2.16.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@nillion/nuc": "^0.1.1",
+    "@nillion/secretvaults": "^0.1.6",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0"
+  }
+}
+
