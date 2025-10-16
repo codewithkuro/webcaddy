@@ -11,12 +11,22 @@ document.addEventListener('DOMContentLoaded', function() {
         let country = getInputText('countrytf');
 
         console.log(`${firstname} ${lastname} ${phone} ${email} ${address} ${city} ${country}`);
+        
+        fetch('http://localhost:3000/contactinfo', {
+            method: 'post',
+            body: JSON.stringify({                
+                firstname,
+                lastname,
+                phone,
+                email,
+                address,
+                city,
+                country
+            })}).then(resp => resp.json()).then(result => console.log(result)).catch(err => console.log(err));
+        
 
     });
 
-    // document.getElementById('activatePrivateStorageSubmitBtn').addEventListener('click', () => {
-    //     console.log("Activating private storage ..");
-    // });
 });
 
 function clearInput(id) {
@@ -30,7 +40,4 @@ function getInputText(name) {
     if(element) val = element.value;
     
     return val;
-}function clearInput(id: string) {
-    const emailInput = document.getElementById(id) as HTMLInputElement;
-    if (emailInput) emailInput.value = "";
-  }
+}

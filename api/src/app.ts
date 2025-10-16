@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import { randomUUID } from 'node:crypto';
 import { config as loadEnv } from 'dotenv';
+import cors from 'cors';
 
 loadEnv();
 
@@ -33,8 +34,7 @@ interface User {
     name: string
 }
 
-interface ContactInfo {
-  did: string,
+interface ContactInfo {  
   firstname: string,
   lastname: string,
   email: string,
@@ -48,6 +48,7 @@ const app = express();
 
 const userDids = new Map();
 
+app.use(cors());
 app.use(express.json());
 
 let users: User[] = [];
@@ -78,8 +79,8 @@ app.get('/userdid', async (req: Request, res: Response) => {
 app.post('/contactinfo', async (req: Request, res: Response) => {
   const contactinfo: ContactInfo = req.body;
   let userKeypair, userDid, userClient, delegation;
-
-  if (!contactinfo.did) {
+  // console.log('req body: ', req);
+  if (!req.body.hasOwnProperty('did')) {
     userKeypair = Keypair.generate();
     userDid = userKeypair.toDid();
     userDids.set(userDid, userKeypair);

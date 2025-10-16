@@ -4,14 +4,15 @@
   "source": "src/app.ts",
   "main": "dist/app.js",
   "type": "module",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "parcel watch",
     "build": "parcel build",
     "dev": "ts-node src/app.ts",
     "redev": "npm run build && npm run prod",
     "prod": "node dist/app.js"
-
   },
   "keywords": [],
   "author": "",
@@ -28,8 +29,8 @@
   "dependencies": {
     "@nillion/nuc": "^0.1.1",
     "@nillion/secretvaults": "^0.1.6",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0"
   }
 }
-
