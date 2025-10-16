@@ -34,7 +34,7 @@ interface User {
 }
 
 interface ContactInfo {
-  id: string,
+  did: string,
   firstname: string,
   lastname: string,
   email: string,
@@ -76,45 +76,55 @@ app.get('/userdid', async (req: Request, res: Response) => {
 });
 
 app.post('/contactinfo', async (req: Request, res: Response) => {
-    const contactinfo: ContactInfo = req.body;
+  const contactinfo: ContactInfo = req.body;
+  let userKeypair, userDid, userClient, delegation;
 
-    let contactInfo = {
-      _id: randomUUID(),
-      firstname: req.body.firstname,
-      lastname: req.body.lastname,
-      email: { '%allot': req.body.email },
-      phone: { '%allot': req.body.phone },
-      address: { '%allot': req.body.address},
-      region: { '%allot': req.body.region },
-      country: {'%allot': req.body.country }
-    };
-    
-    try {
-    const uploadResults = await userClient.createData(delegation, {
-      owner: userDid,
-      acl: {
-        grantee: builderDid,
-        read: true,
-        write: false,
-        execute: true
-      },
-      collection: contactInfoCollectionId,
-      data: [contactInfo]
-    })  
-    res.status(201).json(uploadResult);
-  } catch(err) {
-    res.status(500).send(err);
+  if (!contactinfo.did) {
+    userKeypair = Keypair.generate();
+    userDid = userKeypair.toDid();
+    userDids.set(userDid, userKeypair);
+  } else {
+    userKeypair = userDids.get(req.body.did);
+    userDid = userKeypair.toDid();
   }
+
+  userClient = await createUserClient(userKeypair);
+  delegation = await createDelegation(userKeypair);
+
+  let contactInfo = {
+    _id: randomUUID(),
+    firstname: req.body.firstname,
+    lastname: req.body.lastname,
+    email: { '%allot': req.body.email },
+    phone: { '%allot': req.body.phone },
+    address: { '%allot': req.body.address },
+    region: { '%allot': req.body.region },
+    country: { '%allot': req.body.country }
+  };
+
+  const uploadResults = await userClient.createData(delegation, {
+    owner: userDid.toString(),
+    acl: {
+      grantee: builderDid,
+      read: true,
+      write: false,
+      execute: true
+    },
+    collection: contactInfoCollectionId,
+    data: [contactInfo]
+  });
+  uploadResults.did = userDid.toString();
+  res.status(201).json(uploadResults);
+
 });
 
 const PORT = process.env.PORT || 3000;
 
-let builderKeypair, userKeypair, builderDid, userDid;
+let builderKeypair, builderDid;
 let payer, nilauth;
 let builder, existingProfile;
 let collectionId, collection;
 let contactInfoCollectionId;
-let userClient, delegation;
 
 main().then(() => {
   app.listen(PORT, () => {
@@ -126,13 +136,9 @@ main().then(() => {
 async function createKeypairs() {
     // Step 1: Create keypairs for builder and user
     builderKeypair = Keypair.from(config.BUILDER_PRIVATE_KEY); // Use your funded key
-    userKeypair = Keypair.generate(); // Generate random user
-
     builderDid = builderKeypair.toDid().toString();
-    userDid = userKeypair.toDid().toString();
 
     console.log('Builder DID:', builderDid);
-    console.log('User DID:', userDid);
 }
 
 
@@ -189,11 +195,11 @@ async function main() {
   // await setupCollection();
   await setupContactInfoCollection();
 
-  userClient = await createUserClient();
-  delegation = await createDelegation();
+  // userClient = await createUserClient();
+  // delegation = await createDelegation();
 }
 
-async function createDelegation() {
+async function createDelegation(userKeypair) {
   const delegation = NucTokenBuilder.extending(builder.rootToken)
   .command(new Command(['nil', 'db', 'data', 'create']))
   .audience(userKeypair.toDid())
@@ -352,7 +358,7 @@ async function setupCollection() {
 
 }
 
-async function createUserClient() {  
+async function createUserClient(userKeypair) {  
   const user = await SecretVaultUserClient.from({
     baseUrls: config.NILDB_NODES,
     keypair: userKeypair,
